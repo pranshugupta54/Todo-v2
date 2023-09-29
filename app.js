@@ -5,10 +5,7 @@ const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const date = require(__dirname + "/date.js");
 require('dotenv').config();
-<<<<<<< Updated upstream
-=======
-const fetchData = require('./fetchData');
->>>>>>> Stashed changes
+const fetchData = require('./fetch');
 
 const app = express();
 
@@ -17,9 +14,6 @@ app.set('view engine', 'ejs');
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(express.static("public"));
 
-<<<<<<< Updated upstream
-mongoose.connect(process.env.MONGO_URI, {useNewUrlParser: true, useUnifiedTopology: true});
-=======
 mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true });
 
 
@@ -40,7 +34,6 @@ setInterval(async () => {
       console.error('Error Pinging', error);
   }
 }, 13 * 60 * 1000);
->>>>>>> Stashed changes
 
 const itemsSchema = {
   name: {
