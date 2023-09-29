@@ -5,15 +5,20 @@
   </div>
 
   <div class="box">
-    <% for (let i=0; i<newListItems.length; i++) { %>
-      <div class="item">
-        <input type="checkbox">
-        <p><%=  newListItems[i]  %></p>
-      </div>
-      <% } %>
+    
+
+      <% newListItems.forEach(function(Item){ %>
+        <form action="/delete" method="post">
+          <div class="item">
+            <button value="<%= Item._id %>" style="color: #A683E3; background-color: white;" type="submit" name="delete">&#x1f5d1;</button>
+            <input type="checkbox">
+            <p><%= Item.name %></p>
+          </div>
+        </form>
+      <% }) %> 
 
       <form class="item" action="/" method="post">
-        <input type="text" name="newItem" placeholder="New Item" autocomplete="off">
+        <input type="text" name="newItem" placeholder="New Item" autocomplete="off" required>
         <button type="submit" name="list">+</button>
       </form>
   </div>
