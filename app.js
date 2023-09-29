@@ -4,6 +4,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const date = require(__dirname + "/date.js");
+require('dotenv').config();
 
 const app = express();
 
@@ -12,7 +13,7 @@ app.set('view engine', 'ejs');
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(express.static("public"));
 
-mongoose.connect("mongodb://localhost:27017/todolistDB");
+mongoose.connect(process.env.MONGO_URI, {useNewUrlParser: true, useUnifiedTopology: true});
 
 const itemsSchema = {
   name: {
@@ -51,18 +52,7 @@ app.get("/", function(req, res) {
 const day = date.getDate()
 console.log(day);
   Item.find({}, function(err, foundItems){
-    if(foundItems.length === 0) {
-      Item.insertMany(defaultItems, function(err){
-        if (err) {
-          console.log(err);
-        } else {
-          console.log("Added items");
-        }
-      });
-      res.redirect("/");
-    } else {
     res.render("list", {listTitle: day, newListItems: foundItems});
-    }
   });
 });
 
@@ -81,18 +71,23 @@ app.post("/", async function(req, res){
 
 });
 
-app.post("/delete", async function(req,res){
+app.post("/delete", async function (req, res) {
   const itemDelNameID = req.body.delete;
 
-  await Item.findByIdAndRemove(itemDelNameID, function(err){
-    if (err) {
-      console.log(err);
+  try {
+    const deletedItem = await Item.findByIdAndRemove(itemDelNameID);
+    if (!deletedItem) {
+      console.log("Item not found");
     } else {
       console.log("Deleted");
     }
-  })
+  } catch (err) {
+    console.error("Error:", err);
+  }
+
   res.redirect("/");
 });
+
 
 
 app.get("/work", function(req,res){
